@@ -5,7 +5,7 @@ class Workspace(object):
     def __init__(self,number, tiler):
         self.number = number
         self._monitor = None
-        self._tiler = tiler
+        self.tiler = tiler
         self._windows = []
         self._tiled_windows = []
         self._floating_windows = []
@@ -17,9 +17,10 @@ class Workspace(object):
     def add_window(self,window):
         if window not in self._windows:
             self._windows.append(window)
-            window.show()
-            if window.get_class_name() not in config.decorate_classes:
-                window.undecorate()
+            if not self._hidden:
+                window.show()
+                if window.get_class_name() not in config.decorate_classes:
+                    window.undecorate()
             if not window.floating:
                 try:
                     self._tiled_windows.insert(self._tiled_windows.index(self._active_window), window)
@@ -50,7 +51,7 @@ class Workspace(object):
         for window in self._windows:
             window.hide()
         self._hidden = True
-        #self._tiler.hide()
+        #self.tiler.hide()
 
     def show(self):
         for window in self._tiled_windows:
@@ -61,13 +62,10 @@ class Workspace(object):
             self._active_window.focus()
         self._hidden = False
         self._retile()
-        #self._tiler.show()
+        #self.tiler.show()
 
     def get_windows(self):
         return self._windows
-
-    def get_tiler(self):
-        return self._tiler
 
     def get_monitor(self):
         return self._monitor
@@ -79,8 +77,9 @@ class Workspace(object):
         else:
             self.show()
 
-    def make_tiler(self, tiler):
-        self._tiler = tiler
+    def set_tiler(self, tiler):
+        self.tiler = tiler
+        self._retile()
 
     def get_monitor_dimmensions(self):
         Dimmensions = collections.namedtuple('Dimmensions', ['x', 'y',"width","height"])
@@ -153,5 +152,5 @@ class Workspace(object):
 
     def _retile(self):
         if not self._hidden:
-            self._tiler.tile(self.get_monitor_dimmensions(), self._main_windows, self._main_size, self._tiled_windows)
+            self.tiler.tile(self.get_monitor_dimmensions(), self._main_windows, self._main_size, self._active_window, self._tiled_windows)
         pass

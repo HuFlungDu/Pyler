@@ -1,6 +1,6 @@
 name = "Tall"
 
-def tile(dimmensions, main_windows, main_area_size, windows):
+def tile(dimmensions, main_windows, main_area_size, active_window, windows):
     for i, window in enumerate(windows):
         if i < main_windows:
             try:

@@ -42,8 +42,9 @@ def main():
 
             elif message[1][2] == win32con.HSHELL_WINDOWACTIVATED:
                 try:
-                    pyler.active_monitor.get_workspace().get_tiler().set_active_window(window.Window(message[1][3]))
-                except:
+                    pyler.active_monitor.get_workspace().set_active_window(window.Window(message[1][3]))
+                except Exception as e:
+                    print e
                     pass
     except:
         print sys.exc_info()[0]

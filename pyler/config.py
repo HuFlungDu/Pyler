@@ -1,5 +1,5 @@
 import pyler
-from pyler.tilers import tall
+from pyler.tilers import tall,mirrortall,full
 from pyler import keycodes
 from pyler.keycodes import *
 
@@ -8,6 +8,7 @@ import win32gui
 import win32con
 
 default_tiler = tall
+tilers = [tall,mirrortall,full]
 
 class EndProgram(Exception):
     pass
@@ -32,9 +33,10 @@ def switch_workspace(hotkey,workspace):
 def send_to_workspace(hotkey,workspace):
     newworkspace = pyler.workspaces[workspace]
     workspace = pyler.active_monitor.get_workspace()
-    active = workspace.get_active_window()
-    workspace.remove_window(active)
-    newworkspace.add_window(active)
+    if workspace != newworkspace:
+        active = workspace.get_active_window()
+        workspace.remove_window(active)
+        newworkspace.add_window(active)
 
 def increase_main_area_window_count(hotkey):
     pyler.active_monitor.get_workspace().increase_main_area_window_count()
@@ -57,6 +59,10 @@ def move_window_up(hotkey):
 
 def move_window_down(hotkey):
     pyler.active_monitor.get_workspace().move_window_down()
+
+def cycle_tilers(hotkey):
+    newtiler = tilers[(tilers.index(pyler.active_monitor.get_workspace().tiler)+1)%len(tilers)]
+    pyler.active_monitor.get_workspace().set_tiler(newtiler)
 
 hotkeys = {
     (mod_super,k_1): lambda x: switch_workspace(x,1),
@@ -85,6 +91,7 @@ hotkeys = {
     (mod_super,k_k):switch_window_down,
     (mod_super|mod_shift,k_j):move_window_up,
     (mod_super|mod_shift,k_k):move_window_down,
+    (mod_super,k_Space):cycle_tilers,
     (mod_super|mod_shift,k_q): quit
 }
 
