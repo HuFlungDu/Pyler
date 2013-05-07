@@ -53,7 +53,9 @@ def main():
             for w in pyler.workspaces[ws]._windows:
                 try:
                     w.show()
-                except:
+                    w.decorate()
+                except Exception as e:
+                    print e
                     pass
 
 if __name__ == '__main__':

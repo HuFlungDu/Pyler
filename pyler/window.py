@@ -48,19 +48,28 @@ class Window(object):
 
     def focus(self):
         win32gui.SetForegroundWindow(self._window)
+        #win32gui.SetFocus(self._window)
+
+    def bring_to_foreground(self):
+        win32gui.SetForegroundWindow(self._window)
 
     def is_decorated(self):
-        return win32gui.GetWindowLong(self._window, win32con.GWL_STYLE) & win32con.WS_CAPTION
+        return bool(win32gui.GetWindowLong(self._window, win32con.GWL_STYLE) & win32con.WS_CAPTION)
+
+    def get_class_name(self):
+        return win32gui.GetClassName(self._window)
 
     def undecorate(self):
-        style = win32gui.GetWindowLong(self._window, win32con.GWL_STYLE)
-        style -= win32con.WS_CAPTION 
-        win32gui.SetWindowLong(self._window, win32con.GWL_STYLE, style)
+        if self.is_decorated():
+            style = win32gui.GetWindowLong(self._window, win32con.GWL_STYLE)
+            style -= win32con.WS_CAPTION 
+            win32gui.SetWindowLong(self._window, win32con.GWL_STYLE, style)
 
     def decorate(self):
-        style = win32gui.GetWindowLong(self._window, win32con.GWL_STYLE)
-        style += WS_CAPTION
-        win32gui.SetWindowLong(self._window, win32con.GWL_STYLE, style)
+        if not self.is_decorated():
+            style = win32gui.GetWindowLong(self._window, win32con.GWL_STYLE)
+            style += win32con.WS_CAPTION
+            win32gui.SetWindowLong(self._window, win32con.GWL_STYLE, style)
 
     def toggle_decoration(self):
         if is_valid(self._window):

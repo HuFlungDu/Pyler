@@ -87,3 +87,6 @@ hotkeys = {
     (mod_super|mod_shift,k_k):move_window_down,
     (mod_super|mod_shift,k_q): quit
 }
+
+float_classes = []
+decorate_classes = ["Chrome_WidgetWin_0","Chrome_WidgetWin_1"]
