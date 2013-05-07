@@ -1,0 +1,153 @@
+import collections
+
+class Workspace(object):
+    def __init__(self,number, tiler):
+        self.number = number
+        self._monitor = None
+        self._tiler = tiler
+        self._windows = []
+        self._tiled_windows = []
+        self._floating_windows = []
+        self._main_windows = 1
+        self._main_size = .5
+        self._active_window = None
+        self._hidden = False
+
+    def add_window(self,window):
+        if window not in self._windows:
+            self._windows.append(window)
+            if not window.floating:
+                try:
+                    self._tiled_windows.insert(self._tiled_windows.index(self._active_window), window)
+                except ValueError:
+                    self._tiled_windows.append(window)
+            else:
+                self._floating_windows.append(window)
+            self._active_window = window
+            self._retile()
+
+    def remove_window(self,window):
+        self._windows.remove(window)
+        if window.floating:
+            self._floating_windows.remove(window)
+        else:
+            index = self._tiled_windows.index(self._active_window)
+            self._tiled_windows.remove(window)
+            if len(self._tiled_windows):
+                self._active_window = self._tiled_windows[index % len(self._tiled_windows)]
+            elif len(self._floating_windows):
+                self._active_window = self._floating_windows[-1]
+            else:
+                self._active_window = None
+        window.hide()
+        self._retile()
+
+    def hide(self):
+        for window in self._windows:
+            window.hide()
+        self._hidden = True
+        #self._tiler.hide()
+
+    def show(self):
+        for window in self._tiled_windows:
+            window.show()
+        for window in self._floating_windows:
+            window.show()
+        if self._active_window is not None:
+            self._active_window.focus()
+        self._hidden = False
+        self._retile()
+        #self._tiler.show()
+
+    def get_windows(self):
+        return self._windows
+
+    def get_tiler(self):
+        return self._tiler
+
+    def get_monitor(self):
+        return self._monitor
+
+    def set_monitor(self,monitor):
+        self._monitor = monitor
+        if monitor is None:
+            self.hide()
+        else:
+            self.show()
+
+    def make_tiler(self, tiler):
+        self._tiler = tiler
+
+    def get_monitor_dimmensions(self):
+        Dimmensions = collections.namedtuple('Dimmensions', ['x', 'y',"width","height"])
+        if self._monitor is not None:
+            return Dimmensions(self._monitor.x,self._monitor.y,self._monitor.width,self._monitor.height)
+        else:
+            return Dimmensions(0,0,0,0)
+
+    def move_window_up(self):
+        try:
+            if self._active_window in self._tiled_windows:
+                index = self._tiled_windows.index(self._active_window)
+                newindex = (index-1) % len(self._tiled_windows)
+                self._tiled_windows[newindex],self._tiled_windows[index] = self._tiled_windows[index],self._tiled_windows[newindex]
+                self._retile()
+            else:
+                index = self._floating_windows.index(self._active_window)
+                newindex = (index+1) % len(self._floating_windows)
+                self._floating_windows[newindex],self._floating_windows[index] = self._floating_windows[index],self._floating_windows[newindex]
+                self._retile()
+        except ValueError:
+            raise WindowNotFoundError("Given window not found in tiler")
+        
+    def move_window_down(self):
+        try:
+            if self._active_window in self._tiled_windows:
+                index = self._tiled_windows.index(self._active_window)
+                newindex = (index+1) % len(self._tiled_windows)
+                self._tiled_windows[newindex],self._tiled_windows[index] = self._tiled_windows[index],self._tiled_windows[newindex]
+                self._retile()
+            else:
+                index = self._floating_windows.index(self._active_window)
+                newindex = (index-1) % len(self._floating_windows)
+                self._floating_windows[newindex],self._floating_windows[index] = self._floating_windows[index],self._floating_windows[newindex]
+                self._retile()
+        except ValueError:
+            raise WindowNotFoundError("Given window not found in tiler")
+        
+    def switch_window_up(self):
+        windows = self._tiled_windows + self._floating_windows
+        self._active_window = windows[(windows.index(self._active_window) - 1) % len(windows)]
+        self._active_window.focus()
+
+    def switch_window_down(self):
+        windows = self._tiled_windows + self._floating_windows
+        self._active_window = windows[(windows.index(self._active_window) + 1) % len(windows)]
+        self._active_window.focus()
+
+    def get_active_window(self):
+        return self._active_window
+
+    def set_active_window(self, window):
+        if window in self._windows:
+            self._active_window = window
+            window.focus()
+        else:
+            raise WindowNotFoundError("Given window not found in tiler")
+
+    def increase_main_area_size(self):
+        pass
+    def decrease_main_area_size(self):
+        pass
+    def increase_main_area_window_count(self):
+        self._main_windows += 1
+        self._retile()
+
+    def decrease_main_area_window_count(self):
+        self._main_windows = max(self._main_windows-1,0)
+        self._retile()
+
+    def _retile(self):
+        if not self._hidden:
+            self._tiler.tile(self.get_monitor_dimmensions(), self._main_windows, self._main_size, self._tiled_windows)
+        pass
