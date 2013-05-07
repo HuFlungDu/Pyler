@@ -6,6 +6,7 @@ import config
 import win32gui
 import win32con
 import collections
+import config
 
 _window_class_name = "pseudo"
 _window_class = win32gui.WNDCLASS()
@@ -43,7 +44,7 @@ for w, i in zip(workspaces,xrange(len(monitors))):
 
 for key_combo in config.hotkeys:
     hotkey.register_hotkey(key_combo[1],key_combo[0],config.hotkeys[key_combo])
-windows = window.get_valid_windows()
+windows = window.get_valid_windows()[::-1]
 workspaceiter = iter(workspaces)
 w = workspaceiter.next()
 for vwindow in windows:
