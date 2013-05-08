@@ -15,6 +15,7 @@ import sys
 import traceback
 
 
+
 def main():
     if not ctypes.windll.user32.RegisterShellHookWindow(pyler.pseudo_window):
         print win32api.FormatMessage(win32api.GetLastError())
@@ -50,6 +51,7 @@ def main():
         print sys.exc_info()[0]
         traceback.print_exc()
     finally:
+        pyler.statusbar.show()
         for ws in pyler.workspaces:
             for w in pyler.workspaces[ws]._windows:
                 try:

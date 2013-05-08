@@ -1,5 +1,9 @@
 import collections
+import pyler
 from pyler import config
+
+class WindowNotFoundError(Exception):
+    pass
 
 class Workspace(object):
     def __init__(self,number, tiler):
@@ -13,6 +17,7 @@ class Workspace(object):
         self._main_size = .5
         self._active_window = None
         self._hidden = False
+        self._show_taskbar = True
 
     def add_window(self,window):
         if window not in self._windows:
@@ -47,6 +52,15 @@ class Workspace(object):
         window.hide()
         self._retile()
 
+    def toggle_struts(self):
+        if self._show_taskbar:
+            pyler.statusbar.hide()
+            self._show_taskbar = False
+        else:
+            pyler.statusbar.show()
+            self._show_taskbar = True
+        self._retile()
+
     def hide(self):
         for window in self._windows:
             window.hide()
@@ -60,6 +74,10 @@ class Workspace(object):
             window.show()
         if self._active_window is not None:
             self._active_window.focus()
+        if self._show_taskbar:
+            pyler.statusbar.show()
+        else:
+            pyler.statusbar.hide()
         self._hidden = False
         self._retile()
         #self.tiler.show()

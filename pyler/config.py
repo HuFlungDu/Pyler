@@ -64,6 +64,10 @@ def cycle_tilers(hotkey):
     newtiler = tilers[(tilers.index(pyler.active_monitor.get_workspace().tiler)+1)%len(tilers)]
     pyler.active_monitor.get_workspace().set_tiler(newtiler)
 
+def toggle_struts(hotkey):
+    workspace = pyler.active_monitor.get_workspace()
+    workspace.toggle_struts()
+
 hotkeys = {
     (mod_super,k_1): lambda x: switch_workspace(x,1),
     (mod_super,k_2): lambda x: switch_workspace(x,2),
@@ -86,6 +90,8 @@ hotkeys = {
     (mod_super,k_Comma): increase_main_area_window_count,
     (mod_super,k_Period): decrease_main_area_window_count,
     (mod_super|mod_shift,k_Return): lambda x: subprocess.call("start cmd", shell=True),
+    (mod_super,k_b): toggle_struts,
+    (mod_super|mod_shift,k_b): lambda x: subprocess.call("start chrome", shell=True),
     (mod_super|mod_shift,k_c): destroy_active_window,
     (mod_super,k_j):switch_window_up,
     (mod_super,k_k):switch_window_down,

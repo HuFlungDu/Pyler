@@ -7,6 +7,7 @@ import win32gui
 import win32con
 import collections
 import config
+import taskbar
 
 _window_class_name = "pseudo"
 _window_class = win32gui.WNDCLASS()
@@ -36,6 +37,9 @@ win32gui.UpdateWindow(pseudo_window)
 
 monitors = monitor.get_monitors()
 active_monitor = monitors[0]
+# I'd like to make this more generic
+statusbar = taskbar.Taskbar()
+
 workspaces = collections.OrderedDict()
 for i in xrange(1,10):
     workspaces[i] = workspace.Workspace(i,config.default_tiler)

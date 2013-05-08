@@ -24,6 +24,9 @@ def get_valid_windows():
 def window_under_cursor():
     return Window(win32gui.WindowFromPoint(win32api.GetCursorPos()))
 
+def find_window(name):
+    return Window(win32gui.FindWindow(name, None))
+
 
 class Window(object):
     def __init__(self,window):
