@@ -37,6 +37,9 @@ class Window(object):
     def __eq__(self, other):
         return self._window == other.get_window()
 
+    def __hash__(self):
+        return hash(self._window)
+
     def get_window(self):
         return self._window
 
@@ -91,6 +94,9 @@ class Window(object):
                     ,0
                     ,win32con.SWP_FRAMECHANGED + win32con.SWP_NOMOVE + win32con.SWP_NOSIZE + win32con.SWP_NOZORDER
             )
+
+    def exists(self):
+        return win32gui.IsWindow(self._window)
 
     @property
     def classname(self):

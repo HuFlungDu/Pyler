@@ -37,20 +37,24 @@ class Workspace(object):
             self._retile()
 
     def remove_window(self,window):
-        self._windows.remove(window)
-        if window.floating:
-            self._floating_windows.remove(window)
-        else:
-            index = self._tiled_windows.index(self._active_window)
-            self._tiled_windows.remove(window)
-            if len(self._tiled_windows):
-                self._active_window = self._tiled_windows[index % len(self._tiled_windows)]
-            elif len(self._floating_windows):
-                self._active_window = self._floating_windows[-1]
+        if window in self._windows:
+            self._windows.remove(window)
+            if window.floating:
+                self._floating_windows.remove(window)
             else:
-                self._active_window = None
-        window.hide()
-        self._retile()
+                index = self._tiled_windows.index(self._active_window)
+                self._tiled_windows.remove(window)
+                if len(self._tiled_windows):
+                    self._active_window = self._tiled_windows[index % len(self._tiled_windows)]
+                elif len(self._floating_windows):
+                    self._active_window = self._floating_windows[-1]
+                else:
+                    self._active_window = None
+            try:
+                window.hide()
+            except:
+                pass
+            self._retile()
 
     def toggle_struts(self):
         if self._show_taskbar:
@@ -171,4 +175,3 @@ class Workspace(object):
     def _retile(self):
         if not self._hidden:
             self.tiler.tile(self.get_monitor_dimmensions(), self._main_windows, self._main_size, self._active_window, self._tiled_windows)
-        pass

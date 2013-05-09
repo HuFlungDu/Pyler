@@ -37,8 +37,15 @@ def main():
                 
             elif message[1][2] == win32con.HSHELL_WINDOWDESTROYED:
                 try:
-                    pyler.active_monitor.get_workspace().remove_window(window.Window(message[1][3]))
-                except:
+                    win = window.Window(message[1][3])
+                    ws = pyler.active_monitor.get_workspace()
+                    ws.remove_window(win)
+                    if not win.exists():
+                        [pyler.workspaces[w].remove_window(win) for w in pyler.workspaces if w != ws]
+                    #pyler.active_monitor.get_workspace().remove_window(window.Window(message[1][3]))
+
+                except Exception as e:
+                    print e
                     pass
 
             elif message[1][2] == win32con.HSHELL_WINDOWACTIVATED:
@@ -52,14 +59,13 @@ def main():
         traceback.print_exc()
     finally:
         pyler.statusbar.show()
-        for ws in pyler.workspaces:
-            for w in pyler.workspaces[ws]._windows:
-                try:
-                    w.show()
-                    w.decorate()
-                except Exception as e:
-                    print e
-                    pass
+        for w in pyler.get_all_windows():
+            try:
+                w.show()
+                w.decorate()
+            except Exception as e:
+                print e
+                pass
 
 if __name__ == '__main__':
     main()
