@@ -77,6 +77,10 @@ ipch/
 *.psess
 *.vsp
 
+#sublime-text
+*.sublime-project
+*.sublime-workspace
+
 # ReSharper is a .NET coding add-in
 _ReSharper*
 
