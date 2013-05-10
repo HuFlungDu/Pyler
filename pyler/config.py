@@ -71,6 +71,7 @@ def toggle_struts(hotkey):
 global hotkeys
 global float_classes
 global decorate_classes
+global ignore_classes
 
 hotkeys = {
     (mod_super,k_1): lambda x: switch_workspace(x,1),
@@ -111,11 +112,14 @@ hotkeys = {
 
 float_classes = []
 decorate_classes = ["Chrome_WidgetWin_0","Chrome_WidgetWin_1"]
+ignore_classes = []
 
-def init(hk=hotkeys,fc=float_classes,dc=decorate_classes):
+def init(hk=hotkeys,fc=float_classes,dc=decorate_classes,ic=ignore_classes):
     global hotkeys
     global float_classes
     global decorate_classes
+    global ignore_classes
     hotkeys = hk
     float_classes = fc
     decorate_classes = dc
+    ignore_classes = ic

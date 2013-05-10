@@ -65,7 +65,8 @@ def init():
     workspaceiter = iter(workspaces)
     w = workspaceiter.next()
     for vwindow in windows:
-        workspaces[w].add_window(vwindow)
+        if vwindow.get_class_name() not in config.ignore_classes:
+            workspaces[w].add_window(vwindow)
     for w in workspaceiter:
         workspaces[w].hide()
 
