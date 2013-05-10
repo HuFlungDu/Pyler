@@ -47,7 +47,8 @@ class Window(object):
         try:
             win32gui.MoveWindow(self._window,int(x),int(y),int(width),int(height),True)
         except Exception as e:
-            print self.get_class_name()
+            #print self.get_class_name()
+            print e
             raise e
 
     def show(self):

@@ -21,20 +21,25 @@ class Workspace(object):
 
     def add_window(self,window):
         if window not in self._windows:
-            self._windows.append(window)
-            if not self._hidden:
-                window.show()
-                if window.get_class_name() not in config.decorate_classes:
-                    window.undecorate()
-            if not window.floating:
-                try:
-                    self._tiled_windows.insert(self._tiled_windows.index(self._active_window), window)
-                except ValueError:
-                    self._tiled_windows.append(window)
+            try:
+                window.update()
+            except:
+                pass
             else:
-                self._floating_windows.append(window)
-            self._active_window = window
-            self._retile()
+                self._windows.append(window)
+                if not self._hidden:
+                    window.show()
+                    if window.get_class_name() not in config.decorate_classes:
+                        window.undecorate()
+                if not window.floating:
+                    try:
+                        self._tiled_windows.insert(self._tiled_windows.index(self._active_window), window)
+                    except ValueError:
+                        self._tiled_windows.append(window)
+                else:
+                    self._floating_windows.append(window)
+                self._active_window = window
+                self._retile()
 
     def remove_window(self,window):
         if window in self._windows:
