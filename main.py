@@ -3,6 +3,13 @@ import win32gui
 import win32api
 import win32con
 
+import singleinstance
+try:
+    mutex = singleinstance.get_mutex()
+except singleinstance.ApplicationAlreadyrunning:
+    print "Application already running"
+    exit()
+
 import pyler
 from pyler import keycodes
 from pyler import monitor
@@ -53,7 +60,9 @@ def main():
             elif message[1][2] == win32con.HSHELL_WINDOWACTIVATED:
                 try:
                     if message[1][3] > 0:
-                        pyler.active_monitor.get_workspace().set_active_window(window.Window(message[1][3]))
+                        win = window.Window(message[1][3])
+                        if win.get_class_name() not in config.ignore_classes:
+                            pyler.active_monitor.get_workspace().set_active_window(win)
                 except Exception as e:
                     pass
     except:
@@ -72,3 +81,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    singleinstance.close(mutex)
