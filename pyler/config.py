@@ -68,6 +68,10 @@ def toggle_struts(hotkey):
     workspace = pyler.active_monitor.get_workspace()
     workspace.toggle_struts()
 
+global hotkeys
+global float_classes
+global decorate_classes
+
 hotkeys = {
     (mod_super,k_1): lambda x: switch_workspace(x,1),
     (mod_super,k_2): lambda x: switch_workspace(x,2),
@@ -95,11 +99,23 @@ hotkeys = {
     (mod_super|mod_shift,k_c): destroy_active_window,
     (mod_super,k_j):switch_window_up,
     (mod_super,k_k):switch_window_down,
+    #(mod_super,k_Up):switch_window_up,
+    #(mod_super,k_Down):switch_window_down,
     (mod_super|mod_shift,k_j):move_window_up,
     (mod_super|mod_shift,k_k):move_window_down,
+    #(mod_super|mod_shift,k_Up):move_window_up,
+    #(mod_super|mod_shift,k_Down):move_window_down,
     (mod_super,k_Space):cycle_tilers,
     (mod_super|mod_shift,k_q): quit
 }
 
 float_classes = []
 decorate_classes = ["Chrome_WidgetWin_0","Chrome_WidgetWin_1"]
+
+def init(hk=hotkeys,fc=float_classes,dc=decorate_classes):
+    global hotkeys
+    global float_classes
+    global decorate_classes
+    hotkeys = hk
+    float_classes = fc
+    decorate_classes = dc

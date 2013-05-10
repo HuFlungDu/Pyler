@@ -44,7 +44,11 @@ class Window(object):
         return self._window
 
     def set_position(self,x,y,width,height):
-        win32gui.MoveWindow(self._window,int(x),int(y),int(width),int(height),True)
+        try:
+            win32gui.MoveWindow(self._window,int(x),int(y),int(width),int(height),True)
+        except Exception as e:
+            print self.get_class_name()
+            raise e
 
     def show(self):
         win32gui.ShowWindow(self._window, win32con.SW_SHOWNORMAL)
@@ -53,7 +57,10 @@ class Window(object):
         win32gui.ShowWindow(self._window, win32con.SW_HIDE)
 
     def focus(self):
-        win32gui.SetForegroundWindow(self._window)
+        try:
+            win32gui.SetForegroundWindow(self._window)
+        except:
+            pass
         #win32gui.SetFocus(self._window)
 
     def bring_to_foreground(self):

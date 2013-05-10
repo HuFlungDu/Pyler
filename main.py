@@ -17,6 +17,7 @@ import traceback
 
 
 def main():
+    pyler.init()
     if not ctypes.windll.user32.RegisterShellHookWindow(pyler.pseudo_window):
         print win32api.FormatMessage(win32api.GetLastError())
         return
@@ -31,6 +32,7 @@ def main():
                     break
             elif message[1][2] == win32con.HSHELL_WINDOWCREATED:
                 if message[1][3] != 0 and window.is_valid(message[1][3]):
+                    #print message[1][3]
                     newwindow = window.Window(message[1][3])
                     if newwindow not in pyler.get_all_windows():
                         pyler.active_monitor.get_workspace().add_window(newwindow)
@@ -41,7 +43,7 @@ def main():
                     ws = pyler.active_monitor.get_workspace()
                     ws.remove_window(win)
                     if not win.exists():
-                        [pyler.workspaces[w].remove_window(win) for w in pyler.workspaces if w != ws]
+                        [w.remove_window(win) for w in pyler.workspaces.values() if w != ws]
                     #pyler.active_monitor.get_workspace().remove_window(window.Window(message[1][3]))
 
                 except Exception as e:
@@ -50,9 +52,9 @@ def main():
 
             elif message[1][2] == win32con.HSHELL_WINDOWACTIVATED:
                 try:
-                    pyler.active_monitor.get_workspace().set_active_window(window.Window(message[1][3]))
+                    if message[1][3] > 0:
+                        pyler.active_monitor.get_workspace().set_active_window(window.Window(message[1][3]))
                 except Exception as e:
-                    print e
                     pass
     except:
         print sys.exc_info()[0]
