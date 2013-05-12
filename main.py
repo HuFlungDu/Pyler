@@ -7,7 +7,7 @@ import singleinstance
 try:
     mutex = singleinstance.get_mutex()
 except singleinstance.ApplicationAlreadyrunning:
-    print "Application already running"
+    print "Manager already running"
     exit()
 
 import pyler
@@ -18,13 +18,22 @@ from pyler import workspace
 from pyler import window
 from pyler import hotkey
 
+from pyler import exceptions
+
 import sys
 import traceback
+
+import argparse
+import imp
 
 
 
 def main():
-    pyler.init()
+    parser = argparse.ArgumentParser(description='Tiling window manager.')
+    parser.add_argument('-c, --config', dest="config", type=str, nargs='?',
+                       help='config file for manager')
+    args = parser.parse_args()
+    pyler.init(args)
     if not ctypes.windll.user32.RegisterShellHookWindow(pyler.pseudo_window):
         print win32api.FormatMessage(win32api.GetLastError())
         return
@@ -35,7 +44,7 @@ def main():
             if message[1][1] == win32con.WM_HOTKEY:
                 try:
                     hotkey.execute(message[1][2])
-                except config.EndProgram:
+                except exceptions.EndProgram:
                     break
             elif message[1][2] == win32con.HSHELL_WINDOWCREATED:
                 if message[1][3] != 0 and window.is_valid(message[1][3]):

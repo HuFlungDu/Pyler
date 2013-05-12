@@ -1,0 +1,2 @@
+class EndProgram(Exception):
+    pass

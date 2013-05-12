@@ -8,13 +8,9 @@ import win32con
 import collections
 import taskbar
 
+import imp
 
-global pseudo_window
-global monitors
-global active_monitor
-global statusbar
-global workspaces
-def init():
+def init(args):
     global pseudo_window
     global monitors
     global active_monitor
@@ -51,7 +47,11 @@ def init():
     # I'd like to make this more generic
     statusbar = taskbar.Taskbar()
 
-    config.init()
+    if args.config:
+        userconfig = imp.load_source('userconfig', args.config)
+        userconfig.init()
+    else:
+        config.init()
 
     workspaces = collections.OrderedDict()
     for i in xrange(1,10):

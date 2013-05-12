@@ -1,21 +1,9 @@
-import pyler
-from pyler.tilers import tall,mirrortall,full
+from pyler import config
 from pyler import actions
 from pyler.keycodes import *
+from pyler.tilers import *
 
 import subprocess
-import win32gui
-import win32con
-
-
-
-global hotkeys
-global float_classes
-global decorate_classes
-global ignore_classes
-global default_tiler
-global tilers
-
 
 default_tiler = tall
 tilers = [tall,mirrortall,full]
@@ -53,7 +41,7 @@ hotkeys = {
     (mod_super|mod_shift,k_k): actions.move_window_down,
     #(mod_super|mod_shift,k_Up):move_window_up,
     #(mod_super|mod_shift,k_Down):move_window_down,
-    (mod_super,k_Space): lambda x: actions.cycle_tilers(x,tilers),
+    (mod_super,k_Space): actions.cycle_tilers,
     (mod_super|mod_shift,k_q): actions.quit
 }
 
@@ -61,16 +49,11 @@ float_classes = []
 decorate_classes = ["Chrome_WidgetWin_0","Chrome_WidgetWin_1"]
 ignore_classes = []
 
-def init(hotkeys=hotkeys,
-         float_classes=float_classes,
-         decorate_classes=decorate_classes,
-         ignore_classes=ignore_classes,
-         default_tiler=default_tiler,
-         tilers=tilers):
-    globs = globals()
-    globs["hotkeys"] = hotkeys
-    globs["float_classes"] = float_classes
-    globs["decorate_classes"] = decorate_classes
-    globs["ignore_classes"] = ignore_classes
-    globs["default_tiler"] = default_tiler
-    globs["tilers"] = tilers
+def init():
+    config.init(hotkeys=hotkeys,
+                float_classes=float_classes,
+                decorate_classes=decorate_classes,
+                ignore_classes=ignore_classes,
+                default_tiler=default_tiler,
+                tilers=tilers)
+
