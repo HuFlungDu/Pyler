@@ -1,6 +1,6 @@
 # Pyler
 
-Tiling window manager for windows, written in Python.
+Tiling window manager for Windows, written in Python.
 
 Inspired by [xmonad](http://xmonad.org/) and borrowing windows api code from [python windows tiler](https://github.com/Tzbob/python-windows-tiler/blob/master/singleinstance.py). I found out that you could manipulate windows of other applications and this was the first thing that sprang to my mind.
 
