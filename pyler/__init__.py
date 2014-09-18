@@ -60,7 +60,10 @@ def init(args):
         monitors[i].set_workspace(workspaces[w])
 
     for key_combo in config.hotkeys:
-        hotkey.register_hotkey(key_combo[1],key_combo[0],config.hotkeys[key_combo])
+        if not hasattr(config.hotkeys[key_combo], "__iter__"):
+            hotkey.register_hotkey(key_combo[1],key_combo[0],config.hotkeys[key_combo])
+        else:
+            hotkey.register_hotkey(key_combo[1],key_combo[0],config.hotkeys[key_combo][0],*config.hotkeys[key_combo][1:])
     windows = window.get_valid_windows()[::-1]
     workspaceiter = iter(workspaces)
     w = workspaceiter.next()

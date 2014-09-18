@@ -42,6 +42,6 @@ def unregister_hotkey(hotkey_id):
 def execute(hotkey_id):
     try:
         function, hotkey, userdata = hotkeys[hotkey_id][0], hotkeys[hotkey_id][1], hotkeys[hotkey_id][2:]
-        function(hotkey,*userdata)
+        function(*userdata)
     except KeyError:
         raise HotkeyExecutionFailure
