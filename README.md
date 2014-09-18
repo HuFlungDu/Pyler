@@ -50,4 +50,4 @@ Currently, there is no install process, there is no installer, and there is no r
 
    * [Python 2.7](http://www.python.org/getit/)
    * [pywin32](http://sourceforge.net/projects/pywin32/)
-
+   * [pyHook](http://sourceforge.net/projects/pyhook/)

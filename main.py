@@ -3,6 +3,8 @@ import win32gui
 import win32api
 import win32con
 
+import pyHook
+
 import singleinstance
 try:
     mutex = singleinstance.get_mutex()
@@ -26,7 +28,8 @@ import traceback
 import argparse
 import imp
 
-
+import os
+import sys
 
 def main():
     parser = argparse.ArgumentParser(description='Tiling window manager.')
@@ -34,10 +37,20 @@ def main():
                        help='config file for manager')
     args = parser.parse_args()
     pyler.init(args)
+    hook_manager = pyHook.HookManager()
+    def on_mouse_move(event):
+        window = pyler.window.window_under_cursor()
+        window = next((__ for __ in pyler.active_monitor.get_workspace().get_windows() if __ == window), window)
+        if pyler.window.is_valid(window.get_window()):
+            aw = pyler.active_monitor.get_workspace().get_active_window()
+            if window.get_window() != aw.get_window():
+                pyler.active_monitor.get_workspace().set_active_window(window)
+        return True
+    hook_manager.SubscribeMouseMove(on_mouse_move)
+    hook_manager.HookMouse()
     if not ctypes.windll.user32.RegisterShellHookWindow(pyler.pseudo_window):
         print win32api.FormatMessage(win32api.GetLastError())
         return
-
     try:
         while True:
             message = win32gui.GetMessage(pyler.pseudo_window,0,0)
@@ -79,6 +92,7 @@ def main():
         print sys.exc_info()[0]
         traceback.print_exc()
     finally:
+        hook_manager.UnhookMouse()
         pyler.statusbar.show()
         for w in pyler.get_all_windows():
             try:
