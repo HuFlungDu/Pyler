@@ -77,9 +77,9 @@ class Workspace(object):
         #self.tiler.hide()
 
     def show(self):
-        for window in self._tiled_windows:
-            window.show()
         for window in self._floating_windows:
+            window.show()
+        for window in self._tiled_windows:
             window.show()
         if self._active_window is not None:
             self._active_window.focus()
@@ -169,6 +169,7 @@ class Workspace(object):
         pass
     def decrease_main_area_size(self):
         pass
+
     def increase_main_area_window_count(self):
         self._main_windows += 1
         self._retile()
@@ -180,3 +181,17 @@ class Workspace(object):
     def _retile(self):
         if not self._hidden:
             self.tiler.tile(self.get_monitor_dimmensions(), self._main_windows, self._main_size, self._active_window, self._tiled_windows)
+
+    def float_window(self, window):
+        if window in self._tiled_windows:
+            self._tiled_windows.remove(window)
+            self._floating_windows.append(window)
+            window.float = True
+            self._retile()
+
+    def unfloat_window(self, window):
+        if window in self._floating_windows:
+            self._floating_windows.remove(window)
+            self._tiled_windows.insert(0,window)
+            window.float = False
+            self._retile()

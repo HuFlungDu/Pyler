@@ -1,6 +1,7 @@
 import win32gui
 import win32api
 import win32con
+import pyler
 
 def is_valid(window):
     if win32gui.IsWindowVisible(window):
@@ -36,6 +37,8 @@ class Window(object):
         assert window != 0
         self._window = window
         self.floating = False
+        if self.get_class_name() in pyler.config.float_classes:
+            self.floating = True
 
     def __eq__(self, other):
         return self._window == other.get_window()

@@ -30,6 +30,7 @@ hotkeys = {
     (mod_super,k_Comma): actions.increase_main_area_window_count,
     (mod_super,k_Period): actions.decrease_main_area_window_count,
     (mod_super|mod_shift,k_Return): lambda: subprocess.call("start cmd", shell=True),
+    (mod_super,k_t): actions.add_to_tiled,
     (mod_super,k_b): actions.toggle_struts,
     (mod_super|mod_shift,k_b): lambda: subprocess.call("start chrome", shell=True),
     (mod_super|mod_shift,k_f): lambda: subprocess.call("start explorer", shell=True),

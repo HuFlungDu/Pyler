@@ -59,3 +59,8 @@ def cycle_tilers(tilers):
 def toggle_struts():
     workspace = pyler.active_monitor.get_workspace()
     workspace.toggle_struts()
+
+def add_to_tiled():
+    workspace = pyler.active_monitor.get_workspace()
+    active = workspace.get_active_window()
+    workspace.unfloat_window(active)
